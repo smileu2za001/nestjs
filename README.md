@@ -73,3 +73,30 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](LICENSE).
+
+## Progression
+
+- first terminal
+```bash
+$ nest g module auth
+$ nest g controller auth --no-spec
+$ nest g service auth --no-spec
+```
+
+- new folder on auth 'user.entity.ts'
+- new folder on auth 'user.repository.ts'
+
+- on 'auth.module.ts' add into "@Module"
+```bash
+  imports: [
+    TypeOrmModule.forFeature([UserRepository])
+  ],
+```
+
+- on 'auth.module.ts' add into "export class AuthService {"
+```bash
+    constructor(
+        @InjectRepository(UserRepository)
+        private userRepository: UserRepository,
+    ){}
+```
