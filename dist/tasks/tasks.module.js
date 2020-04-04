@@ -9,10 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const tasks_controller_1 = require("./tasks.controller");
 const tasks_service_1 = require("./tasks.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const tasks_repository_1 = require("./tasks.repository");
 let TasksModule = class TasksModule {
 };
 TasksModule = __decorate([
     common_1.Module({
+        imports: [typeorm_1.TypeOrmModule.forFeature([tasks_repository_1.TaskRepository])],
         controllers: [tasks_controller_1.TasksController],
         providers: [tasks_service_1.TasksService]
     })
