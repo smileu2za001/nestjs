@@ -109,3 +109,23 @@ export class TasksService {
         private taskRepository: Repository<Task>,
     ) { }
 ```
+
+
+## Pipe
+####GLOBAL PIPE
+```bash
+    @Post()
+    @UsePipes(ValidationPipe)
+    createTask(@Body() CreateTaskDto: CreateTaskDto): Task {
+```
+####PARAM PIPE
+```bash
+    @Get()
+    getTasks(@Query(ValidationPipe) filterDto: GetTaskFilterDto): Task[]{
+```
+####MANUAL PIPE
+```bash
+    @Patch('/:id/status')
+    updateTaskStatus(@Body('status', TaskStatusValidationPipe) STATUS: TaskStatus ): Task {
+        #look on pipes/folders
+```
