@@ -3,6 +3,7 @@
 <img src="https://cdn.britannica.com/93/153593-050-15D2B42F/Osama-bin-Laden.jpg" width="320" />
   <h4><a href="https://github.com/smileu2za001/nestjs">PART1 - SQL DB Connecting</a></h4>
   <h4><a href="https://github.com/smileu2za001/nestjs-auth">PART2 - User Authentication</a></h4>
+  <h4><a href="https://github.com/smileu2za001/smileu2za001-nestjs-relation">PART3 - Database Relationship</a></h4>
 </p>
 
 ## Create Serv, Ctrl and Module
@@ -112,18 +113,18 @@ export class TasksService {
 
 
 ## Pipe
-####GLOBAL PIPE
+#### GLOBAL PIPE
 ```bash
     @Post()
     @UsePipes(ValidationPipe)
     createTask(@Body() CreateTaskDto: CreateTaskDto): Task {
 ```
-####PARAM PIPE
+#### PARAM PIPE
 ```bash
     @Get()
     getTasks(@Query(ValidationPipe) filterDto: GetTaskFilterDto): Task[]{
 ```
-####MANUAL PIPE
+#### MANUAL PIPE
 ```bash
     @Patch('/:id/status')
     updateTaskStatus(@Body('status', TaskStatusValidationPipe) STATUS: TaskStatus ): Task {
