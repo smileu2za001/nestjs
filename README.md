@@ -1,102 +1,109 @@
+# Welcome to NestJS Connect SQL Project #1
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+<img src="https://cdn.britannica.com/93/153593-050-15D2B42F/Osama-bin-Laden.jpg" width="320" />
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
-
-## Progression
+## Create Serv, Ctrl and Module
 
 - first terminal
 ```bash
-$ nest g module auth
-$ nest g controller auth --no-spec
-$ nest g service auth --no-spec
+$ nest g module task
+$ nest g controller task --no-spec
+$ nest g service task --no-spec
+```
+## Config
+
+```bash
+import {TypeOrmModuleOptions} from '@nestjs/typeorm'
+
+export const typeOrmConfig : TypeOrmModuleOptions = {
+  type: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  username: 'postgres',
+  password: 'manager',
+  database: 'taskmanagement',
+  entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  synchronize: true,
+};
+```
+ในไฟล์ ormconfig.json ก็จะเป็น Config ต่างๆเพื่อเชื่อมกับ SQL สังเกตุตรง "entities" สำคัญมากครับเพื่อบอกให้ TypeORM อ่านไฟล์ .entity ทุกไฟล์เมื่อเรา Run Server
+
+
+## AppModule and Other Moduke
+จากนั้นเราต้องไป Import TypeOrmModule.forRoot() เข้าไปในไฟล์ AppModule 
+```bash
+    TypeOrmModule.forRoot(typeOrmConfig), //config SQLServer on typeorm.config
+```
+จากนั้นเราต้องไป Import     TypeOrmModule.forFeature([TaskRepository]), เข้าไปในไฟล์ TaskModulele
+ปล. ต้องสร้าง class TaskRepository ก่อนนะ
+```bash
+  @EntityRepository(Task)
+  export class TaskRepository extends Repository<Task>{ 
+```
+Tasks Module
+```bash
+    TypeOrmModule.forFeature([TaskRepository]),
 ```
 
-- new folder on auth 'user.entity.ts'
-- new folder on auth 'user.repository.ts'
+## Create Entity
+เสร็จแล้วจึงไปสร้าง Class Entity ดังนี้
 
-- on 'auth.module.ts' add into "@Module"
 ```bash
-  imports: [
-    TypeOrmModule.forFeature([UserRepository])
-  ],
+  @Entity()                       //This Class Entity
+```
+```bash
+  @PrimaryGeneratedColumn()   //จะเป็นการสร้าง Column นั้นให้เป็น key
+```
+```bash
+  @Column()                   //จะเป็นการสร้าง Column ธรรมดา
+```
+```bash
+  export class Task extends BaseEntity{           
+      /* Export to Task Module
+      imports: [
+      TypeOrmModule.forFeature([TaskRepository]),
+      */
 ```
 
-- on 'auth.module.ts' add into "export class AuthService {"
+- create new file on auth 'tasks.entity.ts'
 ```bash
+@Entity()
+export class Task extends BaseEntity{           
+    @PrimaryGeneratedColumn()   
+    id: number;
+
+    @Column() 
+    title: string;
+
+    @Column()
+    description: string; 
+
+    @Column()
+    status : TaskStatus;
+}
+```
+
+
+
+## Service.ts
+Import @InjectRepository , @Repository , @Photo มาไว้นะครับ ตามโค้ดด้านล่าง @InjectRepository(TaskRepository) จะเป็นการบอกให้ Inject ตัว Photo Repository เข้ามาตามที่เราได้ประกาศไว้ใน PhotoModule ครับ
+
+```bash
+@Injectable()
+export class TasksService {
     constructor(
-        @InjectRepository(UserRepository)
-        private userRepository: UserRepository,
-    ){}
+        @InjectRepository(TaskRepository)
+        private taskRepository: TaskRepository,
+    ) { }
+```
+
+เขียนอีกรูปแบบนึง
+```bash
+@Injectable()
+export class TasksService {
+    constructor(
+        @InjectRepository(Task)
+        private taskRepository: Repository<Task>,
+    ) { }
 ```
